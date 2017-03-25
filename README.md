@@ -1,2 +1,2 @@
-# gulp-webpack
-Шаблон старта проекта с системой сборки Gulp
+# thld-project-template
+
