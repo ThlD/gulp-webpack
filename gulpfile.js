@@ -8,7 +8,8 @@ const combine = require('stream-combiner2').obj;
 const throttle = require('lodash.throttle');
 const debug = require('gulp-debug');
 const sourcemaps = require('gulp-sourcemaps');
-const stylus = require('gulp-stylus');
+const sass = require('gulp-sass');
+const fs = require('fs');
 const browserSync = require('browser-sync').create();
 const gulpIf = require('gulp-if');
 const cssnano = require('gulp-cssnano');
@@ -17,7 +18,7 @@ const revReplace = require('gulp-rev-replace');
 const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
 const uglify = require('gulp-uglify');
-const resolver = require('stylus').resolver;
+// const resolver = require('sass-import-resolve')
 const AssetsPlugin = require('assets-webpack-plugin');
 const webpack = require('webpack');
 const notifier = require('node-notifier');
@@ -26,7 +27,7 @@ const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'developm
 
 gulp.task('styles', function() {
 
-  return gulp.src('frontend/styles/index.styl')
+  return gulp.src('frontend/styles/index.scss')
       .pipe(plumber({
         errorHandler: notify.onError(err => ({
           title:   'Styles',
@@ -34,11 +35,7 @@ gulp.task('styles', function() {
         }))
       }))
       .pipe(gulpIf(isDevelopment, sourcemaps.init()))
-      .pipe(stylus({
-        define: {
-          url: resolver()
-        }
-      }))
+      .pipe(sass())
       .pipe(gulpIf(isDevelopment, sourcemaps.write()))
       .pipe(gulpIf(!isDevelopment, combine(cssnano(), rev())))
       .pipe(gulp.dest('public/styles'))
@@ -165,7 +162,7 @@ gulp.task('dev',
         gulp.parallel(
             'serve',
             function() {
-              gulp.watch('frontend/styles/**/*.styl', gulp.series('styles'));
+              gulp.watch('frontend/styles/**/*.scss', gulp.series('styles'));
               gulp.watch('frontend/assets/**/*.*', gulp.series('assets'));
               gulp.watch('frontend/styles/**/*.{svg,png}', gulp.series('styles:assets'));
             }

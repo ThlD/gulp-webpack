@@ -1,0 +1,10 @@
+.page {
+
+  background: url('page/gulp.png');
+
+  &__header {
+    font-size: 60px;
+    background: url('page/cat.svg') no-repeat left;
+    padding-left: 60px;
+  }
+}
